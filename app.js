@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 
-module.exports = app;
+// routes specific to driver CRUD
+const driverRouter = require('./server/routes/driver');
+  app.use('/driver', driverRouter);
 
-app.get('/api', (req, res) => {
-  res.send({ message: 'most basic get route'});
-});
+module.exports = app;
