@@ -8,24 +8,17 @@ const getDrivers = (req, res) => {
 }
 
 const createDrivers = (req, res) => {
-  const driverProps = req.body;
-
-  Driver.create(driverProps)
-    .then( driver => {
-      res.send(driver);
-    });
-
-  // const newDriver = new Driver({
-  //   email: req.body.email
-  // });
-  // newDriver.save()
-  // .then( () => {
-  //   res.status(200).json({ message: 'The driver that you added was successfully saved' });
-  // })
-  // .catch( error => {
-  //   console.log(error);
-  //   res.status(400).json({ message: 'Your request could not be processed' });
-  // })
+  const newDriver = new Driver({
+    email: req.body.email
+  });
+  newDriver.save()
+  .then( () => {
+    res.status(200).json({ message: 'The driver that you added was successfully saved' });
+  })
+  .catch( error => {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  })
 }
 
 // routes
