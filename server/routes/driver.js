@@ -35,10 +35,22 @@ const editDriver = ( req, res ) => {
     })
 }
 
+const deleteDriver = (req, res) => {
+  Driver.findOneAndRemove({ email: req.query.email })
+    .then( () => {
+      res.status(200).json({ message: `driver with email ${req.query.email} was deleted`})
+    })
+    .catch( error => {
+      console.log(error);
+      res.status(400).json({ message: error.message });
+    })
+}
+
 // routes
 router.get('/', getDrivers);
 router.post('/create', createDrivers);
-router.put('/edit', editDriver)
+router.put('/edit', editDriver);
+router.delete('/delete', deleteDriver);
 
 //export routes
 module.exports = router;
