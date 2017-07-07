@@ -13,7 +13,7 @@ const createDrivers = (req, res) => {
   });
   newDriver.save()
   .then( () => {
-    res.status(200).json({ message: 'The driver that you added was successfully saved' });
+    res.status(200).json({ message: `The driver ${req.body.email} was successfully saved` });
   })
   .catch( error => {
     console.log(error);
@@ -21,9 +21,24 @@ const createDrivers = (req, res) => {
   })
 }
 
+const editDriver = ( req, res ) => {
+  Driver.findOneAndUpdate({ email: req.body.email }, req.body)
+    .then( () => Driver.findOne({ email: req.body.email }) )
+    .then( driver => {
+      const availablityStatus = driver.available ?
+        `you are availble to drive` : `you are no longer availble to drive`;
+      res.status(200).json({ message: availablityStatus})
+    })
+    .catch( error => {
+      console.log(error);
+      res.status(400).json({ message: error.message });
+    })
+}
+
 // routes
 router.get('/', getDrivers);
 router.post('/create', createDrivers);
+router.put('/edit', editDriver)
 
 //export routes
 module.exports = router;
