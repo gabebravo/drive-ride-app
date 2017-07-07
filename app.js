@@ -1,10 +1,15 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 
-// mongoose.Promise = global.Promise;
-// if (process.env.NODE_ENV !== 'test') {
-//   mongoose.connect('mongodb://localhost/muber');
-// }
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+
+if (process.env.NODE_ENV !== 'test') {
+  mongoose.connect('mongodb://localhost/drivers',  {
+    useMongoClient: true, // weird new flag mongoose requires
+  });
+}
 
 app.use(bodyParser.json());
 
