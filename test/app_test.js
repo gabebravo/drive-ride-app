@@ -3,6 +3,7 @@ const request = require('supertest');
 const app = require('../app');
 
 describe('The express app', () => {
+
   it('handles a GET request to /driver', (done) => {
     request(app)
       .get('/driver')
@@ -11,4 +12,14 @@ describe('The express app', () => {
         done();
       });
   });
+
+  it('handles a POST request to /driver/create', (done) => {
+    request(app)
+      .get('/driver/create')
+      .end( (err, response) => {
+        assert(response.body.message === 'most basic get route');
+        done();
+      });
+  });
+
 });
