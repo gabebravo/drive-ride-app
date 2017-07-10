@@ -3,8 +3,24 @@ const router = express.Router();
 
 const Driver = require('../schemas/driver');
 
-const getDrivers = (req, res) => {
+const getConnected = (req, res) => {
   res.send({ message: 'most basic get route'});
+}
+
+const getDrivers = (req, res) => {
+  const lng = Number(req.query.lng), lat = Number(req.query.lat);
+
+  Driver.geoNear(
+    { type: 'Point', coordinates: [lng, lat] },
+    { 'spherical': true, maxDistance: 200000 } // distance is in meters 200k = 2kms
+  )
+  .then( drivers => {
+    res.status(200).json({ drivers: drivers });
+  })
+  .catch( error => {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  })
 }
 
 const createDrivers = (req, res) => {
@@ -47,10 +63,12 @@ const deleteDriver = (req, res) => {
 }
 
 // routes
-router.get('/', getDrivers);
+router.get('/start', getConnected);
+
 router.post('/create', createDrivers);
 router.put('/edit', editDriver);
 router.delete('/delete', deleteDriver);
+router.get('/', getDrivers);
 
 //export routes
 module.exports = router;

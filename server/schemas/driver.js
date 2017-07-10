@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const PointSchema = require('./point')
 
 const DriverSchema = new mongoose.Schema({
 
@@ -10,8 +11,10 @@ const DriverSchema = new mongoose.Schema({
   available: {
     type: Boolean,
     default: false
-  }
-  // location:
+  },
+
+  geometry: PointSchema
+
 });
 
 const Driver = mongoose.model('drivers', DriverSchema);

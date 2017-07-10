@@ -10,7 +10,7 @@ describe('Driver routes', () => {
 
   it('handles a GET request to /driver', (done) => {
     request(app)
-      .get('/driver')
+      .get('/driver/start')
       .end( (err, response) => {
         assert(response.body.message === 'most basic get route');
         done();
@@ -53,6 +53,28 @@ describe('Driver routes', () => {
             done();
           });
       })
+  });
+
+  it('handles a GET request to /driver to get drivers in a location', (done) => {
+    const seattleDriver = new Driver({
+        email: 'seattle@test.com',
+        geometry: { type: 'Point', coordinates: [-122.4759902, 47.6147628] }
+    });
+    const miamiDriver = new Driver({
+        email: 'miami@test.com',
+        geometry: { type: 'Point', coordinates: [-80.253, 25.791] }
+    });
+
+    Promise.all([ seattleDriver.save(), miamiDriver.save() ])
+      .then( () => {
+        request(app)
+          .get('/driver?lng=-80&lat=25') // query center point
+          .end( (err, response) => { // returns 1 matching miami driver above
+            assert(response.body.drivers.length === 1);
+            assert(response.body.drivers[0].obj.email === 'miami@test.com');
+            done();
+          });
+      });
   });
 
 });

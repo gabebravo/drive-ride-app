@@ -12,8 +12,11 @@ before( done => {
 });
 
 beforeEach( done => {
-  const { drivers } = mongoose.connection.collections;
+  const drivers = mongoose.connection.collections.drivers;
     drivers.drop()
+      .then( () => drivers.ensureIndex({ // required for geoNear indices drop bug
+        'geometry.coordinates': '2dsphere'
+      }))
       .then(() => done())
       .catch(() =>  done());
 });
